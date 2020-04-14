@@ -144,6 +144,10 @@ export QT_QPA_FB_TSLIB=1
 mkdir /mnt/nfs -r
 mount -t nfs -o intr,nolock,rsize=1024,wsize=1024 192.168.1.120:/home/hehui/work/nfsroot /mnt/nfs/
 
+        安装preloadabel_libiconv.so文件
+把此文件复制到/usr/lib/文件夹下，在etc/profile中添加
+export LD_PRELOAD=/usr/lib/preloadable_libiconv.so:$TSLIB_ROOT/lib/libts.so
+
         开机后台自动运行程序
 打开/urs/etc/rc.local文件
 加入 /./untitled &
