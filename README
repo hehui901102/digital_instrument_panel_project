@@ -138,6 +138,7 @@ export QT_QPA_FB_TSLIB=1
         利用qt creater4.7.1编译qt5.6应用程序
 里面报错：‘nullptr’ was not declared in this scope
 解决办法：程序里把nullptr换成0
+生成untitled文件
 
         nfs连接命令
 设置好ip，ping通
