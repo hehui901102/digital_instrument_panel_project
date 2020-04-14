@@ -1,4 +1,4 @@
-    烧写“编译后可直接使用的文件总汇”文件夹里的u-boot.bin
+        烧写“编译后可直接使用的文件总汇”文件夹里的u-boot.bin
 oflash u-boot.bin
 0
 1
@@ -6,17 +6,17 @@ oflash u-boot.bin
 0
 重启开发板
 
-    修改linux3.4.2内核
+        修改linux3.4.2内核
 打开“linux-3.4.2-JZ2440V3-master”文件夹，它已经包含4.3LCD、触屏、网卡的驱动，但是没有修改内核所在分区的大小，需要修改为4M
 vim arch/arm/mach-s3c24xx/common-smdk.c +125
 把.size  = 2M改为.size =4M
 
-    编译linux3.4.2内核
+        编译linux3.4.2内核
 执行两条指令
 cp config_ok .config
 make uImage CROSS_COMPILE=/usr/local/arm/gcc-4.4.3/bin/arm-linux- ARCH=arm -j8 （确保修改为自己的编译器路径）
 
-    烧写linux3.4.2内核
+        烧写linux3.4.2内核
 提前安装打开TFTP server软件，设定好指定文件夹（含有uImage的文件夹）
 set ipaddr 192.168.0.52
 set serverip 192.168.0.50 （看TFTP server软件里的地址）
@@ -31,13 +31,20 @@ boot
 save
 boot
     
-    不明确是否需要再ubuntu上编译完tslib（需要则查询“2440移植qt”）
+        不明确是否需要再ubuntu上编译完tslib（需要则查询“2440移植qt”）
     
-    烧写yaffs2文件系统
+        烧写yaffs2文件系统
 提前准备TFTP server软件，设定好文件夹路径
 tftp 0x30000000 busybox.yaffs2
-    
-    
+nand erase.part rootfs
+nand write.yaffs 0x30000000 0x460000 $filesize
+重启开发板
+set bootargs console=ttySAC0,115200 root=/dev/mtdblock3 init=/linuxrc
+save
+boot
+此时linux系统启动正常
+
+
 
 
 
