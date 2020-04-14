@@ -88,11 +88,68 @@ vim qt-build.sh
 -I /home/hehui/work/jz2440/qt/tslib_root/include \
 -L /home/hehui/work/jz2440/qt/tslib_root/lib
 
+vim qtbase/mkspecs/linux-arm-guneabi-g++/qmake.conf
+把下面的替换进去
 
+#
+# qmake configuration for building with arm-linux-gnueabi-g++
+#
 
+MAKEFILE_GENERATOR      = UNIX
+CONFIG                 += incremental
+QMAKE_INCREMENTAL_STYLE = sublib
 
+QT_QPA_DEFAULT_PLATFORM = linuxfb
+QMAKE_CFLAGS 	+= -msoft-float -D__GCC_FLOAT_NOT_NEEDED -march=armv4t -mtune=arm920t 
+QMAKE_CXXFLAGS 	+= -msoft-float -D__GCC_FLOAT_NOT_NEEDED -march=armv4t -mtune=arm920t
 
+include(../common/linux.conf)
+include(../common/gcc-base-unix.conf)
+include(../common/g++-unix.conf)
 
+# modifications to g++.conf
+QMAKE_CC                = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-gcc -lts
+QMAKE_CXX               = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-g++ -lts
+QMAKE_LINK              = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-g++ -lts
+QMAKE_LINK_SHLIB        = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-g++ -lts
+
+# modifications to linux.conf
+QMAKE_AR                = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-ar cqs
+QMAKE_OBJCOPY           = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-objcopy
+QMAKE_NM                = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-nm -P
+QMAKE_STRIP             = /usr/local/arm/gcc-4.4.3/bin/arm-none-linux-gnueabi-strip
+
+开始编译安装
+./qt-build.sh
+make -j8
+make install
+然后把编译出来的的lib和plugins文件夹拷贝到开发板的/usr/local/Qt5.6下
+配置开发板环境变量
+vi /etc/profile
+复制下面一段
+export QTEDIR=/usr/local/Qt5.6
+export LD_LIBRARY_PATH=/usr/local/Qt5.6/lib: LD_LIBRARY_PATH
+export QT_QPA_GENERIC_PLUGINS=tslib
+export QT_QPA_FONTDIR=$QTEDIR/lib/fonts 
+export QT_QPA_PLATFORM_PLUGIN_PATH=$QTEDIR/plugins 
+export QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:size=480x272:mmsize=480x272:offset=0x0:tty=/dev/tty1
+export QT_QPA_FB_TSLIB=1
+
+        利用qt creater4.7.1编译qt5.6应用程序
+里面报错：‘nullptr’ was not declared in this scope
+解决办法：程序里把nullptr换成0
+
+        nfs连接命令
+设置好ip，ping通
+mkdir /mnt/nfs -r
+mount -t nfs -o intr,nolock,rsize=1024,wsize=1024 192.168.1.120:/home/hehui/work/nfsroot /mnt/nfs/
+
+        开机后台自动运行程序
+打开/urs/etc/rc.local文件
+加入 /./untitled &
+重启开发板
+
+        至此移植完成
 
 
 
