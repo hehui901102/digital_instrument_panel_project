@@ -43,8 +43,60 @@ set bootargs console=ttySAC0,115200 root=/dev/mtdblock3 init=/linuxrc
 save
 boot
 此时linux系统启动正常
+        
+        校准与测试触控屏
+cd /usr/local/tslib
+./ts_calibrat
+./ts_test
+
+        交叉编译安装qt5.6.0
+tar -zxf qt-everywhere-opensource-src-5.6.0.tar.gz
+cd qt-everywhere-opensource-src-5.6.0/
+mkdir /home/hehui/work/jz2440/qt/Qt5.6/ -r
+touch qt-build.sh
+vim qt-build.sh
+把下面的复制进去
+（-prefix后面是编译好的Qt安装路径，提前建立好
+-I后面是编译安装好的tslib中include路径
+-L后面是编译安装好的tslib中lib路径）
+
+#!/bin/sh
+./configure -prefix /home/hehui/work/jz2440/qt/Qt5.6 \
+-v \
+-opensource \
+-release \
+-confirm-license \
+-xplatform linux-arm-gnueabi-g++ \
+-shared \
+-qt-zlib \
+-no-gif \
+-qt-libjpeg \
+-no-nis \
+-no-opengl \
+-no-cups \
+-no-glib \
+-no-dbus \
+-no-rpath \
+-no-sse2 -no-sse3 -no-ssse3 -no-sse4.1 -no-sse4.2 \
+-no-avx \
+-no-openssl \
+-nomake tools \
+-qreal float \
+-qt-libpng \
+-tslib \
+-nomake examples \
+-I /home/hehui/work/jz2440/qt/tslib_root/include \
+-L /home/hehui/work/jz2440/qt/tslib_root/lib
 
 
+
+
+
+
+
+
+
+         
 
 
 
