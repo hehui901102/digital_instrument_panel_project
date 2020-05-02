@@ -1,0 +1,2 @@
+ifconfig eth0 192.168.0.52
+mount -t nfs -o intr,nolock,rsize=1024,wsize=1024 192.168.0.51:/home/hehui/work/nfsroot /mnt/nfs/
